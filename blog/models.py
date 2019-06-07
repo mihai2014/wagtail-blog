@@ -20,7 +20,20 @@ class BlogIndexPage(Page):
     ]
 
     def get_context(self, request):
-        print(request.GET)
+        #print(request.GET)
+
+        #user=request.user  # can be anonymous user
+        #session=request.session.session_key
+        #print("user",user,"session",session)
+
+        #request.session.set_test_cookie()
+        #if request.session.test_cookie_worked():
+        #        print("The test cookie worked!!!")
+        #        request.session.delete_test_cookie()        
+
+        #request.session[0] = 'bar'
+        #print(request.session[0])
+
 
         # Update context to include only published posts, ordered by reverse-chron
         context = super().get_context(request)

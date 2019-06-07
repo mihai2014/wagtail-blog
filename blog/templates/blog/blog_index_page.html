@@ -5,50 +5,59 @@
 {% block body_class %}template-blogindexpage{% endblock %}
 
 {% block display %}
-    <!--<h1>{{ page.title }}</h1>-->
-    <!--<div class="intro">{{ page.intro|richtext }}</div>-->
 
-    {% for post in blogpages %}
-        {% with post=post.specific %}
+    <!-- start row -->
+    <div class="row" style="border:2px solid red;">
+   
+        <!-- Blog Entries Column (left) -->
+        <div class="col-md-8" style="border:2px solid black;">
+
+            {% for post in blogpages %}
+                {% with post=post.specific %}
+
+                <!-- Blog Post -->
+                <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                    {% with post.main_image as main_image %}
+                        {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
+                    {% endwith %}
+		    <p>{{ post.intro }}</p>
+		    <p class="card-text">{{ post.body|richtext|truncatewords_html:20 }}</p>
+                    <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
+                </div>
+                    <div class="card-footer text-muted">
+                        {{ post.date }} <a href="#">Home</a>
+                    </div>		
+		</div>
+
+                {% endwith %}
+            {% endfor %}
+
+        </div>
+        <!-- End Blog Entries Column -->
 
 
-        <div class="row">
-            <!-- Blog Entries Column -->
-            <div class="col-md-8">
-            <!-- Blog Post -->
-            <div class="card mb-4">
-            <div class="card-body">
+        <!-- Sidebar Widgets Column (right) -->
+        <div class="col-md-4">
 
-            <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-            {% with post.main_image as main_image %}
-                {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
-            {% endwith %}
-	    <p>{{ post.intro }}</p>
-	    <p class="card-text">{{ post.body|richtext|truncatewords:20 }}</p>
-	    <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
-
-	    </div>
-
-              <div class="card-footer text-muted">
- 	        {{ post.date }} <a href="#">Home</a>
-              </div>
-
-	    </div>
+        <div class="card my-4">
+          <h5 class="card-header">Search</h5>
+          <div class="card-body">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button">Go!</button>
+              </span>
             </div>
-	</div>    
+          </div>
+        </div>
 
-        {% endwith %}
-    {% endfor %}
+        </div>
+        <!-- End Sidebar Widgets Column -->
 
-
-        <!-- Pagination -->
-        <ul class="pagination justify-content-center mb-4">
-          <li class="page-item">
-            <a id="back" class="page-link" href="#">&larr; Older</a>
-          </li>
-          <li class="page-item">  <!-- disabled -->
-            <a id = "forward" class="page-link" href="#">Newer &rarr;</a>
-          </li>
-        </ul>
+    </div>
+    <!-- end row -->
+  
 
 {% endblock %}
