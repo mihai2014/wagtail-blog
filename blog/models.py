@@ -10,7 +10,21 @@ from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.search import index
 
+import datetime
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.template.loader import get_template
+
 # Create your models here.
+
+#def set_cookie(response, key, value, days_expire = 7):
+#    if days_expire is None:
+#        max_age = 365 * 24 * 60 * 60  #one year
+#    else:
+#        max_age = days_expire * 24 * 60 * 60 
+#    expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
+#    response.set_cookie(key, value, max_age=max_age, expires=expires, domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None
+
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
@@ -19,29 +33,34 @@ class BlogIndexPage(Page):
         FieldPanel('intro', classname="full")
     ]
 
-    def get_context(self, request):
-        #print(request.GET)
+    def serve(self, request):
+        #request.GET['next']
+        #request.GET['back']
 
-        #user=request.user  # can be anonymous user
-        #session=request.session.session_key
-        #print("user",user,"session",session)
+        page = int( request.COOKIES.get('myblog_page', '0') )
+        print(page)
 
-        #request.session.set_test_cookie()
-        #if request.session.test_cookie_worked():
-        #        print("The test cookie worked!!!")
-        #        request.session.delete_test_cookie()        
+        context = super().get_context(request)
+        blogpages = self.get_children().live().order_by('-first_published_at')
 
-        #request.session[0] = 'bar'
-        #print(request.session[0])
+        context['blogpages'] = blogpages
+        template = get_template('blog/blog_index_page.html')
+        response = HttpResponse(template.render(context, request))
 
+        response.set_cookie('myblog_page', '10', max_age=None)
+        return(response)
+
+
+#    def get_context(self, request):
 
         # Update context to include only published posts, ordered by reverse-chron
-        context = super().get_context(request)
-        blogpages = self.get_children().live().order_by('-first_published_at')  #[0:len(blogpages)]
-        print(len(blogpages))
-        context['blogpages'] = blogpages
-        context['page'] = '1'
-        return context
+#        context = super().get_context(request)
+#        blogpages = self.get_children().live().order_by('-first_published_at')  #[0:len(blogpages)]
+#        print(len(blogpages))
+#        context['blogpages'] = blogpages
+#        context['page'] = '1'
+
+#        return context
 
 
 class BlogPageTag(TaggedItemBase):

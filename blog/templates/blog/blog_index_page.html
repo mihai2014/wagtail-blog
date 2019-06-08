@@ -7,10 +7,10 @@
 {% block display %}
 
     <!-- start row -->
-    <div class="row" style="border:2px solid red;">
+    <div class="row" style="">
    
         <!-- Blog Entries Column (left) -->
-        <div class="col-md-8" style="border:2px solid black;">
+        <div class="col-md-8" style="">
 
             {% for post in blogpages %}
                 {% with post=post.specific %}
@@ -33,6 +33,18 @@
 
                 {% endwith %}
             {% endfor %}
+
+
+            <!-- Pagination -->
+            <ul class="pagination justify-content-center mb-4">
+                <li class="page-item">
+                    <a class="page-link" href="/?page=prev">&larr; Older</a>
+                </li>
+		<li class="page-item">  <!-- disabled -->
+                    <a class="page-link" href="/?page=next">Newer &rarr;</a>
+                </li>
+            </ul>
+
 
         </div>
         <!-- End Blog Entries Column -->
