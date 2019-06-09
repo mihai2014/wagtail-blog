@@ -30,9 +30,13 @@
   <script src="{% static 'blog/bootstrap4/bootstrap.min.js' %}"></script>
 
   <!-- ajax -->
-  <script src="{% static 'blog/js/xhr.js' %}"></script>
+  <!--<script src="{% static 'blog/js/xhr.js' %}"></script>-->
   <!-- actions -->
-  <script src="{% static 'blog/js/set.js' %}"></script>
+  <!--<script src="{% static 'blog/js/set.js' %}"></script>-->
+
+
+  {% block other_js %}
+  {% endblock %}
 
 {% endblock %}
 

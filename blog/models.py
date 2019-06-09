@@ -34,20 +34,43 @@ class BlogIndexPage(Page):
     ]
 
     def serve(self, request):
-        #request.GET['next']
-        #request.GET['back']
+        #'next' / 'prev'
+        try:
+            page_req = request.GET['page']
+        except:
+            page_req = "first"
 
-        page = int( request.COOKIES.get('myblog_page', '0') )
-        print(page)
+        current_page = int( request.COOKIES.get('myblog_page', '0') )
+
+        #print('page',current_page)
+        print(page_req)
 
         context = super().get_context(request)
         blogpages = self.get_children().live().order_by('-first_published_at')
+
+        max_page = 10;
 
         context['blogpages'] = blogpages
         template = get_template('blog/blog_index_page.html')
         response = HttpResponse(template.render(context, request))
 
-        response.set_cookie('myblog_page', '10', max_age=None)
+        if(current_page == 0): #or page_req == 'first':
+            current_page = 1
+            response.set_cookie('myblog_page', str(current_page), max_age=None)
+            response.set_cookie('max_page', str(max_page), max_age=None)
+
+#        else:
+#            if page_req == 'next':
+#                if current_page < total_pages:
+#                    current_page += 1
+#                    response.set_cookie('myblog_page', str(current_page), max_age=None)
+#            if page_req == 'prev':   
+#                if current_page > 1:
+#                    current_page -= 1
+#                    response.set_cookie('myblog_page', str(current_page), max_age=None)
+
+#        print('page',current_page)
+
         return(response)
 
 
