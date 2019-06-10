@@ -61,40 +61,36 @@ class BlogIndexPage(Page):
     ]
 
     def serve(self, request):
-        #'next' / 'prev'
-        try:
-            page_req = request.GET['page']
-        except:
-            page_req = "first"
+        #try:
+        #    page_req = request.GET['page']
+        #except:
+        #    page_req = "first"
 
         current_page = int( request.COOKIES.get('myblog_page', '0') )
-
-        #print('page',current_page)
-        print(page_req)
-
-        context = super().get_context(request)
 
         nr_posts = self.get_children().live().count()
         intervals = pageLimits(nr_posts)
         max_page =len(intervals)   
 
-        if(current_page == 0): #or page_req == 'first':
-            current_page = 1
-            response.set_cookie('myblog_page', str(current_page), max_age=None)
-            response.set_cookie('max_page', str(max_page), max_age=None)
 
-        print(current_page)
+        #print(current_page)
         interval = intervals[current_page-1]
         #print("interval",interval)
         limit1 = interval[0]
         limit2 = interval[1]
-        print(limit1,limit2)
-
+        #print(limit1,limit2)
         blogpages = self.get_children().live().order_by('-first_published_at')[limit1:limit2]
-        context['blogpages'] = blogpages
+
 
         template = get_template('blog/blog_index_page.html')
+        context = super().get_context(request)
+        context['blogpages'] = blogpages
         response = HttpResponse(template.render(context, request))
+
+        if(current_page == 0): #or page_req == 'first':
+            current_page = 1
+            response.set_cookie('myblog_page', str(current_page), max_age=None)
+            response.set_cookie('max_page', str(max_page), max_age=None)
 
         return(response)
 
@@ -103,7 +99,7 @@ class BlogIndexPage(Page):
 
         # Update context to include only published posts, ordered by reverse-chron
 #        context = super().get_context(request)
-#        blogpages = self.get_children().live().order_by('-first_published_at')  #[0:len(blogpages)]
+#        blogpages = self.get_children().live().order_by('-first_published_at') 
 #        print(len(blogpages))
 #        context['blogpages'] = blogpages
 #        context['page'] = '1'
