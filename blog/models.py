@@ -15,6 +15,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 
+
+POSTS_ON_PAGE = 3
+
 # Create your models here.
 
 #def set_cookie(response, key, value, days_expire = 7):
@@ -24,6 +27,30 @@ from django.template.loader import get_template
 #        max_age = days_expire * 24 * 60 * 60 
 #    expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT")
 #    response.set_cookie(key, value, max_age=max_age, expires=expires, domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None
+
+
+def pageLimits(nr_posts):
+    global POSTS_ON_PAGE
+    limits = []
+    intervals = []
+    n = 0
+    while True:
+        #print(n)
+        limits.append(n)
+        n += POSTS_ON_PAGE
+        if(n >= nr_posts):
+            break
+    if(n > nr_posts): 
+        n = nr_posts
+        #print(n)
+        limits.append(n)
+    #print(limits)
+    l = len(limits)
+    for i in range(l-1):
+        interval = limits[i:i+2]
+        intervals.append(interval)
+    #print(intervals)
+    return intervals
 
 
 class BlogIndexPage(Page):
@@ -46,30 +73,28 @@ class BlogIndexPage(Page):
         print(page_req)
 
         context = super().get_context(request)
-        blogpages = self.get_children().live().order_by('-first_published_at')
 
-        max_page = 10;
-
-        context['blogpages'] = blogpages
-        template = get_template('blog/blog_index_page.html')
-        response = HttpResponse(template.render(context, request))
+        nr_posts = self.get_children().live().count()
+        intervals = pageLimits(nr_posts)
+        max_page =len(intervals)   
 
         if(current_page == 0): #or page_req == 'first':
             current_page = 1
             response.set_cookie('myblog_page', str(current_page), max_age=None)
             response.set_cookie('max_page', str(max_page), max_age=None)
 
-#        else:
-#            if page_req == 'next':
-#                if current_page < total_pages:
-#                    current_page += 1
-#                    response.set_cookie('myblog_page', str(current_page), max_age=None)
-#            if page_req == 'prev':   
-#                if current_page > 1:
-#                    current_page -= 1
-#                    response.set_cookie('myblog_page', str(current_page), max_age=None)
+        print(current_page)
+        interval = intervals[current_page-1]
+        #print("interval",interval)
+        limit1 = interval[0]
+        limit2 = interval[1]
+        print(limit1,limit2)
 
-#        print('page',current_page)
+        blogpages = self.get_children().live().order_by('-first_published_at')[limit1:limit2]
+        context['blogpages'] = blogpages
+
+        template = get_template('blog/blog_index_page.html')
+        response = HttpResponse(template.render(context, request))
 
         return(response)
 
