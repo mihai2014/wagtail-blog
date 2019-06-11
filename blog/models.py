@@ -15,6 +15,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template.loader import get_template
 
+from wagtail.search.backends import get_search_backend
+
+from blog.tools import PageTree
 
 POSTS_ON_PAGE = 3
 
@@ -176,4 +179,41 @@ class BlogTagIndexPage(Page):
         context['blogpages'] = blogpages
         return context
 
+class BlogAllTags(Page):
+    def get_context(self, request):
+        tagList = []
+        tags = BlogPageTag.objects.all()
+        #tags = BlogPageTag.objects.order_by("tag")
+        for tag in tags:
+            if tag.tag.name not in tagList:
+                tagList.append(tag.tag.name)
+        tagList.sort()
 
+        context = super().get_context(request)
+        context['tags'] = tagList    
+        return context
+
+class BlogSearch(Page):
+    def get_context(self, request):
+        word = request.GET.get('key')
+        context = super().get_context(request)
+        s = get_search_backend()
+        posts = s.search(word, BlogPage)
+        #Page.objects.search("key", fields=["title"])
+        context['posts'] = posts
+        return context
+
+class BlogTree(Page):
+    def get_context(self, request):
+        context = super().get_context(request)
+
+        index = BlogIndexPage.objects.filter(title='Posts')[0]
+        #posts = index.get_children().live()
+        #print(posts)
+
+        html_menu = PageTree(index).html_menu
+        context['menu'] = html_menu
+
+        return context
+
+    
