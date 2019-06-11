@@ -32,6 +32,12 @@ POSTS_ON_PAGE = 3
 #    response.set_cookie(key, value, max_age=max_age, expires=expires, domain=settings.SESSION_COOKIE_DOMAIN, secure=settings.SESSION_COOKIE_SECURE or None
 
 
+def setContext(context):
+    #latest posts
+    index = BlogIndexPage.objects.filter(title='Posts')[0]
+    latest_posts = index.get_children().live().order_by('-first_published_at')[:5]
+    context['latest_posts'] = latest_posts
+
 def pageLimits(nr_posts):
     global POSTS_ON_PAGE
     limits = []
@@ -98,6 +104,7 @@ class BlogIndexPage(Page):
         template = get_template('blog/blog_index_page.html')
         context = super().get_context(request)
         context['blogpages'] = blogpages
+        setContext(context)
         response = HttpResponse(template.render(context, request))
 
         if(current_page == 1): #or page_req == 'first':
@@ -190,7 +197,8 @@ class BlogAllTags(Page):
         tagList.sort()
 
         context = super().get_context(request)
-        context['tags'] = tagList    
+        context['tags'] = tagList   
+        setContext(context)
         return context
 
 class BlogSearch(Page):
@@ -213,6 +221,7 @@ class BlogTree(Page):
 
         html_menu = PageTree(index).html_menu
         context['menu'] = html_menu
+        setContext(context)
 
         return context
 

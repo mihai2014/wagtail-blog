@@ -8,75 +8,40 @@
 
 {% block display %}
 
-    <!-- start row -->
-    <div class="row" style="">
    
-        <!-- Blog Entries Column (left) -->
-        <div class="col-md-8" style="">
+        {% for post in blogpages %}
+            {% with post=post.specific %}
 
-            {% for post in blogpages %}
-                {% with post=post.specific %}
-
-                <!-- Blog Post -->
-                <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
-                    {% with post.main_image as main_image %}
-                        {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
-                    {% endwith %}
-		    <p>{{ post.intro }}</p>
-		    <p class="card-text">{{ post.body|richtext|truncatewords_html:20 }}</p>
-                    <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
-                </div>
-                    <div class="card-footer text-muted">
-                        {{ post.date }} <a href="#">Home</a>
-                    </div>		
-		</div>
-
+            <!-- Blog Post -->
+            <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                {% with post.main_image as main_image %}
+                    {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
                 {% endwith %}
-            {% endfor %}
-
-
-            <!-- Pagination -->
-            <ul class="pagination justify-content-center mb-4">
-                <li class="page-item">
-                    <a id="prev" class="page-link" href="/posts/?page=">&larr; Prev</a>
-                </li>
-		<li class="page-item">  <!-- disabled -->
-                    <a id="next" class="page-link" href="/posts/?page=">Next &rarr;</a>
-                </li>
-            </ul>
-
-
-        </div>
-        <!-- End Blog Entries Column -->
-
-
-        <!-- Sidebar Widgets Column (right) -->
-        <div class="col-md-4">
-
-        <div class="card my-4">
-          <h5 class="card-header">Latest posts</h5>
-          <div class="card-body">
-		  not ready
-          <!--
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search for...">
-              <span class="input-group-btn">
-                <button class="btn btn-secondary" type="button">Go!</button>
-              </span>
+                <p>{{ post.intro }}</p>
+		<p class="card-text">{{ post.body|richtext|truncatewords_html:50 }}</p>
+                <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
             </div>
-          -->
+                <div class="card-footer text-muted">
+                    {{ post.date }} <a href="#">Home</a>
+                </div>		
+            </div>
 
-          </div>
-        </div>
+            {% endwith %}
+        {% endfor %}
 
-        </div>
-        <!-- End Sidebar Widgets Column -->
 
-    </div>
-    <!-- end row -->
-  
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center mb-4">
+            <li class="page-item">
+                <a id="prev" class="page-link" href="/posts/?page=">&larr; Prev</a>
+            </li>
+            <li class="page-item">  <!-- disabled -->
+                <a id="next" class="page-link" href="/posts/?page=">Next &rarr;</a>
+            </li>
+        </ul>
+
 
 {% endblock %}
 
