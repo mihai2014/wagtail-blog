@@ -9,7 +9,36 @@
     <h1>{{ page.title }}</h1>
     <p class="meta">{{ page.date }}</p>
     <div class="intro">{{ page.intro }}</div>
-    {{ page.body|richtext }}
+
+    {% comment %}{{ page.body|richtext }}{% endcomment %}
+
+                {% for block in page.body %}
+
+                {% if block.block_type == 'heading' %}
+                    <h2>{{ block.value }}</h2>
+                {% elif block.block_type == 'paragraph'%}
+                    {{ block.value }}
+                {% elif block.block_type == 'htmljs'%}
+                    {{ block.value|richtext }}
+
+
+                {% elif block.block_type == 'code_bash'%}
+                    <pre class="prettyprint lang-bash code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_htmljs'%}
+                    <pre class="prettyprint code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_py'%}
+                    <pre class="prettyprint lang-python code-style">{{ block.value }}</pre>
+
+                {% elif block.block_type == 'image' %}
+                    {% image block.value width-600 %}
+
+                {% else %}
+                    <section class="block-{{ block.block_type }}">
+                        {{ block }}
+                </section>
+                {% endif %}
+
+                {% endfor %}
 
     {% for item in page.gallery_images.all %}
         <div style="float: left; margin: 10px">

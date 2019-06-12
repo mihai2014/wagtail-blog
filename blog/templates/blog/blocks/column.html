@@ -1,0 +1,29 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% with blocks=self %}
+ 
+    {% for block in blocks %}
+        {% if block.block_type == 'heading' %}
+            <h2>{{ block.value }}</h2>
+
+        {% elif block.block_type == 'htmljs'%}
+               {{ block.value|richtext }}
+
+        {% elif block.block_type == 'code_bash'%}
+               <pre class="prettyprint lang-bash">{{ block.value }}</pre>
+        {% elif block.block_type == 'code_htmljs'%}
+               <pre class="prettyprint">{{ block.value }}</pre>
+        {% elif block.block_type == 'code_py'%}
+               <pre class="prettyprint lang-python">{{ block.value }}</pre>
+
+
+        {% elif block.block_type == 'image' %}
+            {% image block.value width-900 class="img-responsive" %}
+        {% else %}
+           <section class="block-{{ block.block_type }}">
+               {{ block }}
+           </section>
+        {% endif %}
+    {% endfor %}
+ 
+{% endwith %}

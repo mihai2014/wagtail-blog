@@ -17,7 +17,15 @@ from django.template.loader import get_template
 
 from wagtail.search.backends import get_search_backend
 
+from wagtail.core.fields import StreamField
+from wagtail.core import blocks
+from wagtail.admin.edit_handlers import StreamFieldPanel
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.embeds.blocks import EmbedBlock
+
+from blog.blocks import TwoColumnBlock, ThreeColumnBlock
 from blog.tools import PageTree
+
 
 POSTS_ON_PAGE = 3
 
@@ -134,8 +142,20 @@ class BlogPageTag(TaggedItemBase):
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
-    body = RichTextField(blank=True)
+    #body = RichTextField(blank=True)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+
+    body = StreamField([
+        ('heading', blocks.CharBlock(classname="full title")),
+        ('paragraph', blocks.RichTextBlock()),
+        ('two_columns', TwoColumnBlock()),
+        ('three_columns', ThreeColumnBlock()),
+        ('image', ImageChooserBlock()),
+        #('htmljs', blocks.TextBlock()),
+        #('code_bash', blocks.TextBlock()),
+        #('code_py', blocks.TextBlock()),
+        #('code_htmljs', blocks.TextBlock()),
+        ],null=True,blank=True)
 
     def main_image(self):
         gallery_item = self.gallery_images.first()
@@ -150,14 +170,21 @@ class BlogPage(Page):
     ]
 
     content_panels = Page.content_panels + [
+        InlinePanel('gallery_images', label="Gallery images-Main image"),    
         MultiFieldPanel([
             FieldPanel('date'),
             FieldPanel('tags'),
         ], heading="Blog information"),
         FieldPanel('intro'),
-        FieldPanel('body'),
-        InlinePanel('gallery_images', label="Gallery images"),
+        #FieldPanel('body'),
+        StreamFieldPanel('body'),
+        #InlinePanel('gallery_images', label="Gallery images"),
     ]
+
+    def get_context(self, request):
+        context = super().get_context(request)
+        setContext(context)
+        return context
 
 
 class BlogPageGalleryImage(Orderable):

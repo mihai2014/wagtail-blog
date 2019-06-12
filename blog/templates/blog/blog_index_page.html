@@ -16,11 +16,47 @@
             <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+
                 {% with post.main_image as main_image %}
                     {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
                 {% endwith %}
+
                 <p>{{ post.intro }}</p>
-		<p class="card-text">{{ post.body|richtext|truncatewords_html:50 }}</p>
+
+		<p class="card-text">
+
+		{% comment %}{{ post.body|richtext|truncatewords_html:50 }}{% endcomment %}
+
+                {% for block in page.body %}
+
+	        {% if block.block_type == 'heading' %}
+                    <h2>{{ block.value }}</h2>
+                {% elif block.block_type == 'paragraph'%}
+                    {{ block.value }}
+                {% elif block.block_type == 'htmljs'%}
+                    {{ block.value|richtext }}	
+
+
+	        {% elif block.block_type == 'code_bash'%}
+		    <pre class="prettyprint lang-bash code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_htmljs'%}
+                    <pre class="prettyprint code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_py'%}
+                    <pre class="prettyprint lang-python code-style">{{ block.value }}</pre>
+
+                {% elif block.block_type == 'image' %}
+                    {% image block.value width-600 %}
+
+                {% else %}
+                    <section class="block-{{ block.block_type }}">
+                        {{ block }}
+                </section>
+                {% endif %}	       
+		
+                {% endfor %}
+
+		</p>
+
                 <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
             </div>
                 <div class="card-footer text-muted">
