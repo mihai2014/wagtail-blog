@@ -6,6 +6,13 @@
 
 {% block display %}
 
+    {% for item in page.gallery_images.all %}
+        <div style="margin: 10px">
+            {% image item.image width-500 %}
+            <p>{{ item.caption }}</p>
+        </div>
+    {% endfor %}
+
     <h1>{{ page.title }}</h1>
     <p class="meta">{{ page.date }}</p>
     <div class="intro">{{ page.intro }}</div>
@@ -29,8 +36,13 @@
                 {% elif block.block_type == 'code_py'%}
                     <pre class="prettyprint lang-python code-style">{{ block.value }}</pre>
 
-                {% elif block.block_type == 'image' %}
-                    {% image block.value width-600 %}
+                {% elif block.block_type == 'image_center' %}
+                    {% image block.value width-500 class="rounded mx-auto d-block"  %}
+
+                {% elif block.block_type == 'image_left' %}
+                    <div style="float:left; margin: 10px">
+                    {% image block.value width-250 %}
+                    </div>
 
                 {% else %}
                     <section class="block-{{ block.block_type }}">
@@ -39,14 +51,6 @@
                 {% endif %}
 
                 {% endfor %}
-
-    {% for item in page.gallery_images.all %}
-        <div style="float: left; margin: 10px">
-            {% image item.image fill-320x240 %}
-            <p>{{ item.caption }}</p>
-        </div>
-    {% endfor %}
-
 
     {% if page.tags.all.count %}
         <div class="tags">

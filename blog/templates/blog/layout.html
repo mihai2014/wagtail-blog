@@ -85,7 +85,7 @@
     <!-- end Navigation -->
 
 
-
+    <!-- start container -->
     <div class="container">
 
     <!-- start row -->
@@ -105,7 +105,7 @@
         <div class="col-md-4">
 
         <div class="card my-4">
-          <h5 class="card-header">Latest posts</h5>
+          <h5 class="card-header">Latest edited posts</h5>
           <div class="card-body">
               {% for post in latest_posts %}
                   <p><a href="{{ post.url }}">{{ post.title }}</a></p>
@@ -121,5 +121,27 @@
 
 
     </div>
+    <!-- end container -->
+
+    <!-- isso comentaries -->
+    <!--
+    <script data-isso="//localhost:8001/"
+    src="//localhost:8001/js/embed.min.js"></script>
+    <section id="isso-thread"></section>
+    -->
+
+
+    <footer class="jumbotron text-center bg-primary py-1" style="margin-bottom:0">
+        <div class="col-sm-2 mx-auto text-center">
+            <img class="img-fluid" src="{% static 'blog/img/wagtail_badges/wagtail_badge_retina_white.png' %}" alt="Wagtail-CMS logo"/>
+        </div>
+        <p class="m-0 text-center text-white">Copyright &copy; Corciu Mihai - Oltenita - 2019</p>
+        <p class="m-0 text-center text-white">mc200520052005@yahoo.com</p>
+        <!--
+        <div class="col-sm-1 mx-auto text-center">
+            <img class="img-fluid" src="{% static 'logos/Pi-3.png' %}" alt="Raspberry Pi 3 logo"/>
+        </div>
+        -->
+    </footer>
 
 {% endblock %}

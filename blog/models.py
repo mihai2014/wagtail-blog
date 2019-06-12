@@ -43,7 +43,8 @@ POSTS_ON_PAGE = 3
 def setContext(context):
     #latest posts
     index = BlogIndexPage.objects.filter(title='Posts')[0]
-    latest_posts = index.get_children().live().order_by('-first_published_at')[:5]
+    #                                                    -first_published_at
+    latest_posts = index.get_children().live().order_by('-last_published_at')[:5]
     context['latest_posts'] = latest_posts
 
 def pageLimits(nr_posts):
@@ -150,7 +151,8 @@ class BlogPage(Page):
         ('paragraph', blocks.RichTextBlock()),
         ('two_columns', TwoColumnBlock()),
         ('three_columns', ThreeColumnBlock()),
-        ('image', ImageChooserBlock()),
+        ('image_center', ImageChooserBlock()),
+        ('image_left', ImageChooserBlock()),
         #('htmljs', blocks.TextBlock()),
         #('code_bash', blocks.TextBlock()),
         #('code_py', blocks.TextBlock()),
