@@ -1,0 +1,26 @@
+                {% comment %}
+                {% include_block block.value.image %}
+                {% include_block block.value.caption %}
+                {{ block }}
+                {% endcomment %}
+
+
+The image object is available as block.value - so you can do:
+
+{% load wagtailimages_tags %}
+...
+{% if block.block_type == 'image' %}
+        {% image block.value fill-800x600 %}
+{% endif %}
+
+or, for full control over the <img> tag HTML:
+
+{% load wagtailimages_tags %}
+...
+{% if block.block_type == 'image' %}
+        {% image block.value fill-800x600 as my_image %}
+        <img class="photo" src="{{ my_image.url }}" width="{{ my_image.width }}" height="{{ my_image.height }}">
+{% endif %}
+
+
+

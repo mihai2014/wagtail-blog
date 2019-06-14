@@ -23,7 +23,7 @@ from wagtail.admin.edit_handlers import StreamFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.embeds.blocks import EmbedBlock
 
-from blog.blocks import TwoColumnBlock, ThreeColumnBlock
+from blog.blocks import TwoColumnBlock, ThreeColumnBlock, ImageLeftBlock, ImageCenterBlock
 from blog.tools import PageTree
 
 
@@ -151,8 +151,8 @@ class BlogPage(Page):
         ('paragraph', blocks.RichTextBlock()),
         ('two_columns', TwoColumnBlock()),
         ('three_columns', ThreeColumnBlock()),
-        ('image_center', ImageChooserBlock()),
-        ('image_left', ImageChooserBlock()),
+        ('image_center', ImageCenterBlock()),
+        ('image_left', ImageLeftBlock()),
         #('htmljs', blocks.TextBlock()),
         #('code_bash', blocks.TextBlock()),
         #('code_py', blocks.TextBlock()),

@@ -8,7 +8,15 @@
 
     {% for item in page.gallery_images.all %}
         <div style="margin: 10px">
-            {% image item.image width-500 %}
+	    {% comment %}	
+            {% image item.image width-700  class="" %}
+	    {% endcomment %}
+
+        {% image item.image width-700 as my_image %}
+        <img class="photo " src="{{ my_image.url }}" width="100%">
+
+
+
             <p>{{ item.caption }}</p>
         </div>
     {% endfor %}
@@ -16,7 +24,7 @@
     <h1>{{ page.title }}</h1>
     <p class="meta">{{ page.date }}</p>
     <div class="intro">{{ page.intro }}</div>
-
+    
     {% comment %}{{ page.body|richtext }}{% endcomment %}
 
                 {% for block in page.body %}
@@ -24,7 +32,7 @@
                 {% if block.block_type == 'heading' %}
                     <h2>{{ block.value }}</h2>
                 {% elif block.block_type == 'paragraph'%}
-                    {{ block.value }}
+		    {{ block.value }}
                 {% elif block.block_type == 'htmljs'%}
                     {{ block.value|richtext }}
 
@@ -36,6 +44,7 @@
                 {% elif block.block_type == 'code_py'%}
                     <pre class="prettyprint lang-python code-style">{{ block.value }}</pre>
 
+		{% comment %}    
                 {% elif block.block_type == 'image_center' %}
                     {% image block.value width-500 class="rounded mx-auto d-block"  %}
 
@@ -43,15 +52,35 @@
                     <div style="float:left; margin: 10px">
                     {% image block.value width-250 %}
                     </div>
+                {% endcomment %}
+
+                {% elif block.block_type == 'image_center' %}
+                    <figure>
+			{% image block.value.image width-500 class="rounded mx-auto d-block"  %}
+                        <figcaption>
+                            {{  block.value.caption }}
+                        </figcaption>
+                    </figure>
+
+                {% elif block.block_type == 'image_left' %}
+		    <figure>
+			    <!--<div style="float:left; margin: 10px; height:50px;">-->
+		            {% image block.value.image width-250 class="float-left" %}
+    		            <!--</div>-->		    
+    		        <figcaption>
+		            {{  block.value.caption }}
+    		        </figcaption>
+		    </figure>
 
                 {% else %}
+		    <!-- two, three columns -->
                     <section class="block-{{ block.block_type }}">
-                        {{ block }}
-                </section>
+			    {{  block }}
+                    </section>
                 {% endif %}
 
                 {% endfor %}
-
+    
     {% if page.tags.all.count %}
         <div class="tags">
             <h3>Tags</h3>

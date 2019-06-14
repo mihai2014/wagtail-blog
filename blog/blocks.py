@@ -2,6 +2,27 @@ from wagtail.core.fields import StreamField
 from wagtail.core import blocks
 from wagtail.images.blocks import ImageChooserBlock
 
+
+class ImageCenterBlock(blocks.StructBlock):
+
+    image = ImageChooserBlock(icon='image', label='Image Center')
+    caption = blocks.TextBlock(icon='placeholder', label='caption')
+
+    class Meta:
+    #    template = 'blog/blocks/image_center.html'
+        icon = 'image'
+        label = 'Image Left'
+
+class ImageLeftBlock(blocks.StructBlock):
+
+    image = ImageChooserBlock(icon='image', label='Image Left')
+    caption = blocks.TextBlock(icon='placeholder', label='caption')
+
+    class Meta:
+    #    template = 'blog/blocks/image_left.html'
+        icon = 'image'
+        label = 'Image Left'
+
 class ColumnBlock(blocks.StreamBlock):
 
     heading = blocks.CharBlock(classname="full title")

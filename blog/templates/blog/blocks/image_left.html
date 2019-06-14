@@ -1,0 +1,26 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% if block.block_type == 'image' %}
+    {% image block.value fill-800x600 %}
+{% endif %} 
+
+
+
+<!--
+<figure>
+    <div style="float:left; margin: 10px; height:50px;">
+	    {{ self.image }}
+    </div>
+    <figcaption>
+	    {{ self.caption }}
+    </figcaption>
+</figure>
+-->
+
+
+<!--
+<div style="width:image width px; font-size:80%; text-align:center;">
+    <img src="URL" alt="alternate text" width="width" height="height" style="padding-bottom:0.5em;" />
+    This is my caption
+</div>
+-->
