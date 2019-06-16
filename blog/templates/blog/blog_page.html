@@ -5,18 +5,12 @@
 {% block body_class %}template-blogpage{% endblock %}
 
 {% block display %}
-
+    
     {% for item in page.gallery_images.all %}
-        <div style="margin: 10px">
-	    {% comment %}	
-            {% image item.image width-700  class="" %}
-	    {% endcomment %}
-
-        {% image item.image width-700 as my_image %}
-        <img class="photo " src="{{ my_image.url }}" width="100%">
-
-
-
+        <div style="margin: 0px;">
+	    {% comment %}{% image item.image width-700  class="" %}{% endcomment %}
+            {% image item.image width-700 as my_image %}
+            <img class="photo " src="{{ my_image.url }}" width="100%">
             <p>{{ item.caption }}</p>
         </div>
     {% endfor %}

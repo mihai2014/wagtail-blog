@@ -26,6 +26,7 @@ from wagtail.embeds.blocks import EmbedBlock
 from blog.blocks import TwoColumnBlock, ThreeColumnBlock, ImageLeftBlock, ImageCenterBlock
 from blog.tools import PageTree
 
+from wagtail.snippets.models import register_snippet
 
 POSTS_ON_PAGE = 3
 
@@ -145,6 +146,7 @@ class BlogPage(Page):
     intro = models.CharField(max_length=250)
     #body = RichTextField(blank=True)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    #categories = ParentalManyToManyField('blog.BlogCategory', blank=True)
 
     body = StreamField([
         ('heading', blocks.CharBlock(classname="full title")),
@@ -153,10 +155,11 @@ class BlogPage(Page):
         ('three_columns', ThreeColumnBlock()),
         ('image_center', ImageCenterBlock()),
         ('image_left', ImageLeftBlock()),
-        #('htmljs', blocks.TextBlock()),
-        #('code_bash', blocks.TextBlock()),
-        #('code_py', blocks.TextBlock()),
-        #('code_htmljs', blocks.TextBlock()),
+        ('video', EmbedBlock(icon="media")),
+        ('htmljs', blocks.TextBlock(icon="cog")),
+        ('code_bash', blocks.TextBlock(icon="code")),
+        ('code_py', blocks.TextBlock(icon="code")),
+        ('code_htmljs', blocks.TextBlock(icon="code")),
         ],null=True,blank=True)
 
     def main_image(self):
@@ -176,6 +179,7 @@ class BlogPage(Page):
         MultiFieldPanel([
             FieldPanel('date'),
             FieldPanel('tags'),
+            #FieldPanel('categories', widget=forms.CheckboxSelectMultiple),
         ], heading="Blog information"),
         FieldPanel('intro'),
         #FieldPanel('body'),
@@ -230,6 +234,14 @@ class BlogAllTags(Page):
         setContext(context)
         return context
 
+class BlogAllCategories(Page):
+    def get_context(self, request):
+        context = super().get_context(request)
+        categories = BlogCategory.objects.all()
+        context['categories'] = categories
+        setContext(context)
+        return context    
+
 class BlogSearch(Page):
     def get_context(self, request):
         word = request.GET.get('key')
@@ -254,4 +266,23 @@ class BlogTree(Page):
 
         return context
 
-    
+@register_snippet
+class BlogCategory(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.ForeignKey(
+        'wagtailimages.Image', null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='+'
+    )
+
+    panels = [
+        FieldPanel('name'),
+        ImageChooserPanel('icon'),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+        

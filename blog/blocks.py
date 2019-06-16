@@ -1,7 +1,7 @@
 from wagtail.core.fields import StreamField
 from wagtail.core import blocks
 from wagtail.images.blocks import ImageChooserBlock
-
+from wagtail.embeds.blocks import EmbedBlock
 
 class ImageCenterBlock(blocks.StructBlock):
 

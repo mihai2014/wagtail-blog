@@ -92,7 +92,7 @@
     <div class="row" style="">
 
         <!-- Left column -->
-        <div class="col-md-8" style="">
+        <div class="col-md-8" style="border: 0px solid black">
 
             {% block display %}
             {% endblock %}
@@ -102,9 +102,9 @@
 
 
         <!-- Sidebar Widgets Right Column -->
-        <div class="col-md-4">
+        <div class="col-md-4"  style="padding-top:2px; border: 0px solid black">
 
-        <div class="card my-4">
+        <div class="card my-0">
           <h5 class="card-header">Latest edited posts</h5>
           <div class="card-body">
               {% for post in latest_posts %}
@@ -112,6 +112,14 @@
 	      {% endfor %}
           </div>
         </div>		  
+
+        <!--
+        <div class="card my-2">
+	    <div class="card-body">
+	    ....	    
+	    </div>	    
+	</div>	
+        -->
 
         </div>
         <!-- End Sidebar Widgets Right Column -->
