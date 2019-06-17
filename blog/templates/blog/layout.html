@@ -12,7 +12,7 @@
 
   <!-- Custom styles for this template -->
   <link href="{% static 'blog/css/blog-home.css' %}" rel="stylesheet">
-  <link rel="shortcut icon" type="image/png" href='{% static "blog/img/tux.png" %}' />
+  <link rel="shortcut icon" type="image/png" href='{% static "blog/img/hermes1.png" %}' />
 
 {% endblock %}
 
@@ -46,11 +46,10 @@
 
     <!-- Navigation -->
 
-    <!--<nav class="navbar navbar-expand-lg py-0 navbar-dark bg-dark fixed-top">-->
     <nav class="navbar navbar-expand-sm py-0 bg-primary navbar-dark fixed-top">	    
       <div class="container">
         <a class="navbar-brand" href="#">
-            <img height="35" class="rounded"  src="{% static "blog/img/tree.jpg" %}" />
+            <img height="35" class="rounded"  src="{% static "blog/img/mysite.png" %}" />
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -92,7 +91,7 @@
     <div class="row" style="">
 
         <!-- Left column -->
-        <div class="col-md-8" style="border: 0px solid black">
+        <div class="col-md-8 rounded" style="border: 0px solid black; background-color: white; padding-top:5px;">
 
             {% block display %}
             {% endblock %}
@@ -102,7 +101,7 @@
 
 
         <!-- Sidebar Widgets Right Column -->
-        <div class="col-md-4"  style="padding-top:2px; border: 0px solid black">
+        <div class="col-md-4"  style="padding-top:5px; border: 0px solid black">
 
         <div class="card my-0">
           <h5 class="card-header">Latest edited posts</h5>
@@ -138,18 +137,14 @@
     <section id="isso-thread"></section>
     -->
 
+    <br>
 
     <footer class="jumbotron text-center bg-primary py-1" style="margin-bottom:0">
         <div class="col-sm-2 mx-auto text-center">
             <img class="img-fluid" src="{% static 'blog/img/wagtail_badges/wagtail_badge_retina_white.png' %}" alt="Wagtail-CMS logo"/>
         </div>
         <p class="m-0 text-center text-white">Copyright &copy; Corciu Mihai - Oltenita - 2019</p>
-        <p class="m-0 text-center text-white">mc200520052005@yahoo.com</p>
-        <!--
-        <div class="col-sm-1 mx-auto text-center">
-            <img class="img-fluid" src="{% static 'logos/Pi-3.png' %}" alt="Raspberry Pi 3 logo"/>
-        </div>
-        -->
+	<!--<p class="m-0 text-center text-white">mc200520052005@yahoo.com</p>-->
     </footer>
 
 {% endblock %}

@@ -1,8 +1,19 @@
 {% extends "blog/layout.html" %}
 
 {% load wagtailcore_tags wagtailimages_tags %}
-
 {% block body_class %}template-blogpage{% endblock %}
+
+{% block meta-data %}
+
+    <meta name="keywords" content="
+    {% if page.tags.all.count %}        
+        {% for tag in page.tags.all %}
+            {{ tag }}
+        {% endfor %}
+    {% endif %}
+    ">
+
+{% endblock %}
 
 {% block display %}
     
