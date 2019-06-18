@@ -1,0 +1,113 @@
+{% extends "blog/layout.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% load static %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block display %}
+
+   
+        {% for post in blogpages %}
+            {% with post=post.specific %}
+
+            <!-- Blog Post -->
+            <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title navbar-custom"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+
+                {% with post.main_image as main_image %}
+                    {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
+                {% endwith %}
+
+                <p>{{ post.intro }}</p>
+
+		<p class="card-text">
+
+		{% comment %}{{ post.body|richtext|truncatewords_html:50 }}{% endcomment %}
+
+                {% for block in page.body %}
+
+	        {% if block.block_type == 'heading' %}
+                    <h2>{{ block.value }}</h2>
+                {% elif block.block_type == 'paragraph'%}
+                    {{ block.value }}
+                {% elif block.block_type == 'htmljs'%}
+                    {{ block.value|richtext }}	
+
+
+	        {% elif block.block_type == 'code_bash'%}
+		    <pre class="prettyprint lang-bash code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_htmljs'%}
+                    <pre class="prettyprint code-style">{{ block.value }}</pre>
+                {% elif block.block_type == 'code_py'%}
+                    <pre class="prettyprint lang-python code-style">{{ block.value }}</pre>
+
+                {% elif block.block_type == 'image' %}
+                    {% image block.value width-600 %}
+
+                {% else %}
+                    <section class="block-{{ block.block_type }}">
+                        {{ block }}
+                </section>
+                {% endif %}	       
+		
+                {% endfor %}
+
+		</p>
+
+                <a href="{% pageurl post %}" class="btn navbar-custom">Read More &rarr;</a>
+            </div>
+                <div class="card-footer text-muted">
+                    {{ post.date }} <a href="#">Home</a>
+                </div>		
+            </div>
+
+            {% endwith %}
+        {% endfor %}
+
+
+        <!-- Pagination -->
+        <ul class="pagination justify-content-center mb-4">
+            <li class="page-item">
+                <a id="prev" class="page-link" href="/posts/?page=">&larr; Prev</a>
+            </li>
+            <li class="page-item">  <!-- disabled -->
+                <a id="next" class="page-link" href="/posts/?page=">Next &rarr;</a>
+            </li>
+        </ul>
+
+
+{% endblock %}
+
+
+{% block other_js %}
+
+    <script src="{% static 'blog/js/cookies.js' %}"></script>
+
+    <script>
+	max_page = parseInt(getCookie('max_page'));     
+        page = parseInt(getCookie('myblog_page'));
+        //setCookie('myblog_page',(page+1).toString()) 
+
+        if(max_page != null && page != null){
+
+            var prev = document.getElementById("prev");
+            var next = document.getElementById("next");
+            prev.onclick = function(){
+		if (page > 1){    
+		    setCookie('myblog_page',(page-1).toString())	
+	            this.href += (page-1).toString() 	
+		}    
+	    }
+            next.onclick = function(){
+		if (page < max_page){    
+		    setCookie('myblog_page',(page+1).toString())
+	            this.href += (page+1).toString() 
+		}	    
+	    }
+
+	}	
+    </script>
+{% endblock %}

@@ -1,0 +1,34 @@
+https://coderwall.com/p/mvsoyg/django-dumpdata-and-loaddata
+
+all database
+./manage.py dumpdata > db.json
+only an app
+./manage.py dumpdata blog > blog.json
+a table
+./manage.py dumpdata admin.logentry > logentry.json
+./manage.py dumpdata auth.user > user.json
+
+exclude table
+./manage.py dumpdata --exclude auth.permission > db.json
+pretty print
+./manage.py dumpdata auth.user --indent 2 > user.json
+format xml
+./manage.py dumpdata auth.user --indent 2 --format xml > user.xml
+
+
+./manage.py loaddata user.json
+
+
+Restore fresh database
+
+    When you backup whole database by using dumpdata command, it will backup all the database tables
+
+    If you use this database dump to load the fresh database(in another django project), it can be causes IntegrityError (If you loaddata in same database it works fine)
+
+    To fix this problem, make sure to backup the database by excluding contenttypes and auth.permissions tables
+
+./manage.py dumpdata --exclude auth.permission --exclude contenttypes > db.json
+
+    Now you can use loaddata command with a fresh database
+
+./manage.py loaddata db.json

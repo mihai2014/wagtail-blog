@@ -217,6 +217,7 @@ class BlogTagIndexPage(Page):
         # Update template context
         context = super().get_context(request)
         context['blogpages'] = blogpages
+        setContext(context)
         return context
 
 class BlogAllTags(Page):
