@@ -9,13 +9,13 @@
 {% block display %}
 
    
-        {% for post in blogpages %}
+        {% for post in posts %}
             {% with post=post.specific %}
 
             <!-- Blog Post -->
             <div class="card mb-4">
             <div class="card-body">
-                <h2 class="card-title navbar-custom"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                <h2 class="card-title"><a href="{% pageurl post %}">{{ post.title }}</a></h2>
 
                 {% with post.main_image as main_image %}
                     {% if main_image %}{% image main_image fill-160x100 %}{% endif %}
@@ -25,7 +25,6 @@
 
 		<p class="card-text">
 
-		{% comment %}{{ post.body|richtext|truncatewords_html:50 }}{% endcomment %}
 
                 {% for block in page.body %}
 
@@ -57,7 +56,7 @@
 
 		</p>
 
-                <a href="{% pageurl post %}" class="btn navbar-custom">Read More &rarr;</a>
+                <a href="{% pageurl post %}" class="btn btn-primary">Read More &rarr;</a>
             </div>
                 <div class="card-footer text-muted">
                     {{ post.date }} <a href="#">Home</a>
@@ -68,46 +67,38 @@
         {% endfor %}
 
 
-        <!-- Pagination -->
-        <ul class="pagination justify-content-center mb-4">
-            <li class="page-item">
-                <a id="prev" class="page-link" href="/posts/?page=">&larr; Prev</a>
-            </li>
-            <li class="page-item">  <!-- disabled -->
-                <a id="next" class="page-link" href="/posts/?page=">Next &rarr;</a>
-            </li>
-        </ul>
+  {# Only show pagination if there is more than one page to click through #}
+  {% if posts.paginator.num_pages > 1 %}
+  <div class="col-sm-3 mx-auto text-center" style="border: 0px solid black;">
+          <div class="pagination">
+            {% if posts.has_previous %}
+              <li class="page-item">
+                <a href="?page={{ posts.previous_page_number }}" class="page-link">
+                  <span>&laquo;</span>
+                </a>
+              </li>
+            {% endif %}
 
+            {% for page_num in posts.paginator.page_range %}
+              <li class="page-item {% if page_num == posts.number %} active{% endif %}">
+                <a href="?page={{ page_num }}" class="page-link">
+                  {{ page_num }}
+                </a>
+              </li>
+            {% endfor %}
+
+            {% if posts.has_next %}
+              <li class="page-item">
+                <a href="?page={{ posts.next_page_number }}" class="page-link">
+                  <span>&raquo;</span>
+                </a>
+              </li>
+            {% endif %}
+          </div>
+  </div>
+  <br>
+  {% endif %}
 
 {% endblock %}
 
 
-{% block other_js %}
-
-    <script src="{% static 'blog/js/cookies.js' %}"></script>
-
-    <script>
-	max_page = parseInt(getCookie('max_page'));     
-        page = parseInt(getCookie('myblog_page'));
-        //setCookie('myblog_page',(page+1).toString()) 
-
-        if(max_page != null && page != null){
-
-            var prev = document.getElementById("prev");
-            var next = document.getElementById("next");
-            prev.onclick = function(){
-		if (page > 1){    
-		    setCookie('myblog_page',(page-1).toString())	
-	            this.href += (page-1).toString() 	
-		}    
-	    }
-            next.onclick = function(){
-		if (page < max_page){    
-		    setCookie('myblog_page',(page+1).toString())
-	            this.href += (page+1).toString() 
-		}	    
-	    }
-
-	}	
-    </script>
-{% endblock %}

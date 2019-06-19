@@ -29,6 +29,9 @@ from blog.tools import PageTree
 
 from wagtail.snippets.models import register_snippet
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from wagtail.core.models import Page
+
 POSTS_ON_PAGE = 3
 
 # Create your models here.
@@ -80,59 +83,32 @@ class BlogIndexPage(Page):
         FieldPanel('intro', classname="full")
     ]
 
-    def serve(self, request):
-        #try:
-        #    page_req = request.GET['page']
-        #except:
-        #    page_req = "first"
+    def get_context(self, request, *args, **kwargs):
+        """Adding custom stuff to our context."""
+        context = super().get_context(request, *args, **kwargs)
+        # Get all posts
+        all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
 
-        current_page = int( request.COOKIES.get('myblog_page', '1') )
+        # Paginate all posts by 3 per page
+        paginator = Paginator(all_posts, 3)
+        # Try to get the ?page=x value
+        page = request.GET.get("page")
+        try:
+            # If the page exists and the ?page=x is an int
+            posts = paginator.page(page)
+        except PageNotAnInteger:
+            # If the ?page=x is not an int; show the first page
+            posts = paginator.page(1)
+        except EmptyPage:
+            # If the ?page=x is out of range (too high most likely)
+            # Then return the last page
+            posts = paginator.page(paginator.num_pages)
 
-        #reset page cookie to 1
-        if(len(request.GET)==0):
-            current_page = 1
-
-        index_blog = Page.objects.get(slug='index-blog')
-        children = index_blog.get_children()
-        for child in children:
-            if(child.title=="Posts"):
-                posts = child
-
-        nr_posts = posts.get_children().live().count()
-        intervals = pageLimits(nr_posts)
-        max_page = len(intervals)   
-
-
-        #print("current_page",current_page)
-        interval = intervals[current_page-1]
-        limit1 = interval[0]
-        limit2 = interval[1]
-        #print(limit1,limit2)
-
-        blogpages = posts.get_children().live().order_by('-first_published_at')[limit1:limit2]
-        #blogpages = self.get_children().live().order_by('-first_published_at')[limit1:limit2]
-
-        template = get_template('blog/blog_index_page.html')
-        context = super().get_context(request)
-        context['blogpages'] = blogpages
+        # "posts" will have child pages; you'll need to use .specific in the template
+        # in order to access child properties, such as youtube_video_id and subtitle
+        context["posts"] = posts
         setContext(context)
-        response = HttpResponse(template.render(context, request))
-
-        if(current_page == 1): #or page_req == 'first':
-            response.set_cookie('myblog_page', str(current_page), max_age=None)
-            response.set_cookie('max_page', str(max_page), max_age=None)
-
-        return(response)
-
-
-#    def get_context(self, request):
-        # Update context to include only published posts, ordered by reverse-chron
-#        context = super().get_context(request)
-#        blogpages = self.get_children().live().order_by('-first_published_at') 
-#        print(len(blogpages))
-#        context['blogpages'] = blogpages
-#        context['page'] = '1'
-#        return context
+        return context
 
 
 class BlogPageTag(TaggedItemBase):
