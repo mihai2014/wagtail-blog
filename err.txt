@@ -1,3 +1,0 @@
-'StreamValue' object has no attribute 'get_rendition'
-AttributeError: 'StructValue' object has no attribute 'get_rendition'
-
