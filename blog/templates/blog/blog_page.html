@@ -26,23 +26,39 @@
         </div>
     {% endfor %}
 
-    <h1>{{ page.title }}</h1>
-    <p class="meta">{{ page.date }}</p>
-    <div class="intro">{{ page.intro }}</div>
+<!--
+   <div class="container-fluid">
+       <div class="row">
+           <div class="col-sm-6">
+		   coloana 1
+           </div>
+           <div class="col-sm-6">
+		   coloana 2
+           </div> 
+       </div>
+   </div>	   
+-->
+    <p class="meta float-right">Last updated: {{ page.date }}</p>
 
+    <p class="">
     {% with categories=page.categories.all %}
         {% if categories %}
-            <h3>Category:</h3>
-            <ul>
+	    <p>Category:</p>
                 {% for category in categories %}
-                    <li style="display: inline">
+                        <div class="float-left" style="border: 1px solid black; height: 35px; margin-right:5px; border-radius: 25px; padding:3px;">
                         {% image category.icon fill-32x32 style="vertical-align: middle" %}
                         {{ category.name }}
-                    </li>
+                        </div>
                 {% endfor %}
-            </ul>
         {% endif %}
-    {% endwith %}
+    {% endwith %}    
+    </p>
+
+
+    <br class="float-none"><br><br>
+    <h1>{{ page.title }}</h1>
+    <div class="intro">{{ page.intro }}</div>
+    <br>
 
     {% comment %}{{ page.body|richtext }}{% endcomment %}
 
@@ -110,19 +126,18 @@
     {% endif %}
 
 
-        <!-- Pagination -->
-        <ul class="pagination justify-content-center mb-4">
-            <li class="page-item {% if prev is None %} disabled {% endif %}" >
-		    <a id="prev" class="page-link" href="{{ prev.url }}">&larr; Prev</a>
-            </li>
-            <li class="page-item {% if next is None %} disabled {% endif %}" >
-		    <a id="next" class="page-link" href="{{ next.url }}">Next &rarr;</a>
-            </li>
-        </ul>
+    <!-- Pagination -->
+    <ul class="pagination justify-content-center mb-4">
+        <li class="page-item {% if prev is None %} disabled {% endif %}" >
+            <a id="prev" class="page-link" href="{{ prev.url }}">&larr; Prev</a>
+        </li>
+        <li class="page-item {% if next is None %} disabled {% endif %}" >
+	    <a id="next" class="page-link" href="{{ next.url }}">Next &rarr;</a>
+        </li>
+    </ul>
 
 
-
-    <p><a href="{{ page.get_parent.url }}">Home</a></p>
+    <p class="mx-auto text-center"><a href="{{ page.get_parent.url }}">Home</a></p>
 
 
     {% comment %}{% load comments %}{% endcomment %}

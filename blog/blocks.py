@@ -11,7 +11,7 @@ class ImageCenterBlock(blocks.StructBlock):
     class Meta:
     #    template = 'blog/blocks/image_center.html'
         icon = 'image'
-        label = 'Image Left'
+        label = 'Center Image'
 
 class ImageLeftBlock(blocks.StructBlock):
 
@@ -21,7 +21,7 @@ class ImageLeftBlock(blocks.StructBlock):
     class Meta:
     #    template = 'blog/blocks/image_left.html'
         icon = 'image'
-        label = 'Image Left'
+        label = 'Left Image'
 
 class ColumnBlock(blocks.StreamBlock):
 

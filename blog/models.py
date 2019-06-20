@@ -120,7 +120,7 @@ class BlogPageTag(TaggedItemBase):
 
 class BlogPage(Page):
     date = models.DateField("Post date")
-    intro = models.CharField(max_length=250)
+    intro = models.CharField(max_length=250, blank=True)
     #body = RichTextField(blank=True)
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     categories = ParentalManyToManyField('blog.BlogCategory', blank=True)
@@ -223,6 +223,23 @@ class BlogAllCategories(Page):
         context['categories'] = categories
         setContext(context)
         return context    
+
+class BlogQueryCategory(Page):
+    def get_context(self, request):
+        categoryName = request.GET.get('category')
+
+        # Filter posts by category name
+        rez = BlogCategory.objects.filter(name=categoryName)
+        if (len(rez) == 0):
+            return
+        else:
+            # Update template context
+            context = super().get_context(request)
+
+            blogpages = BlogPage.objects.filter(categories=rez[0])
+            context['blogpages'] = blogpages
+            setContext(context)
+            return context
 
 class BlogSearch(Page):
     def get_context(self, request):

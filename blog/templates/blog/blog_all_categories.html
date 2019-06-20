@@ -1,0 +1,15 @@
+{% extends "blog/layout.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogallcategories{% endblock %}
+
+{% block display %}
+    {% if categories %}
+        {% for category in categories %}
+            <p><a href="{% slugurl 'category' %}?category={{ category }}">{{ category }}</a></p>
+        {% endfor %}
+    {% else %}
+        <p>No categories defined.</p>   
+    {% endif %}
+{% endblock %}

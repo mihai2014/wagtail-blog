@@ -5,9 +5,11 @@
 {% block body_class %}template-blogalltags{% endblock %}
 
 {% block display %}
-
-    {% for tag in tags %}
-        <p><a href="{% slugurl 'tags' %}?tag={{ tag }}">{{ tag }}</a></p>
-    {% endfor %}
-
+    {% if tags %}
+        {% for tag in tags %}
+            <p><a href="{% slugurl 'tags' %}?tag={{ tag }}">{{ tag }}</a></p>
+        {% endfor %}
+    {% else %}
+        <p>No tags defined.</p>   
+    {% endif %}
 {% endblock %}

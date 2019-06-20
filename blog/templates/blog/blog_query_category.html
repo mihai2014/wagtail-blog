@@ -1,0 +1,15 @@
+{% extends "blog/layout.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogquerycategory{% endblock %}
+
+{% block display %}
+    {% if blogpages %}
+        {% for post in blogpages %}
+	    <p><a href="{% pageurl post %}">{{ post.title }}</a></p>
+        {% endfor %}
+    {% else %}
+        <p>No posts in this category.</p>   
+    {% endif %}
+{% endblock %}
