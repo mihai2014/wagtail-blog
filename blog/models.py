@@ -166,7 +166,11 @@ class BlogPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
+        prev_page = self.get_prev_siblings().live().first()
+        next_page = self.get_next_siblings().live().first()
         setContext(context)
+        context['prev'] = prev_page
+        context['next'] = next_page
         return context
 
 

@@ -112,19 +112,19 @@
 
         <!-- Pagination -->
         <ul class="pagination justify-content-center mb-4">
-            <li class="page-item">
-                <a id="prev" class="page-link" href="#">&larr; Prev</a>
+            <li class="page-item {% if prev is None %} disabled {% endif %}" >
+		    <a id="prev" class="page-link" href="{{ prev.url }}">&larr; Prev</a>
             </li>
-            <li class="page-item">  <!-- disabled -->
-                <a id="next" class="page-link" href="#">Next &rarr;</a>
+            <li class="page-item {% if next is None %} disabled {% endif %}" >
+		    <a id="next" class="page-link" href="{{ next.url }}">Next &rarr;</a>
             </li>
         </ul>
 
 
 
-    <p><a href="{{ page.get_parent.url }}">Return to blog</a></p>
+    <p><a href="{{ page.get_parent.url }}">Home</a></p>
 
-     
+
     {% comment %}{% load comments %}{% endcomment %}
 
 
